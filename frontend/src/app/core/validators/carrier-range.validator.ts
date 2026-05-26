@@ -22,7 +22,7 @@ export function carrierRangeGroupValidator(control: AbstractControl): Validation
     errors['rangeOrder'] = true;
   }
 
-  const minInitialIdx = rangeStart - 1;
+  const minInitialIdx = rangeStart + 1;
   const maxInitialIdx = rangeEnd - 1;
 
   if (initialIdx < minInitialIdx || initialIdx > maxInitialIdx) {
