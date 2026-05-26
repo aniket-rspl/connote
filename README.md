@@ -17,8 +17,6 @@ Consignment tracking ID manager for logistics carriers. Register carrier account
 - [Database and seed data](#database-and-seed-data)
 - [Testing](#testing)
 - [Project structure](#project-structure)
-- [Production notes](#production-notes)
-- [License](#license)
 
 ## Overview
 
