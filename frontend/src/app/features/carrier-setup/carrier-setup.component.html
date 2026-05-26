@@ -1,0 +1,123 @@
+<div class="mx-auto max-w-2xl">
+  <h1 class="text-2xl font-semibold text-slate-900">Setup carrier</h1>
+  <p class="mt-1 text-sm text-slate-600">
+    Register a carrier account with index range and digit width for tracking IDs.
+  </p>
+
+  <form class="mt-8 space-y-5" [formGroup]="form" (ngSubmit)="submit()">
+    <div>
+      <label class="mb-1 block text-sm font-medium text-slate-700" for="carrierName"
+        >Carrier name</label
+      >
+      <input
+        id="carrierName"
+        type="text"
+        formControlName="carrierName"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+        placeholder="e.g. FedEx"
+      />
+      @if (form.controls.carrierName.touched && form.controls.carrierName.invalid) {
+        <p class="mt-1 text-xs text-red-600">Carrier name is required.</p>
+      }
+    </div>
+
+    <div>
+      <label class="mb-1 block text-sm font-medium text-slate-700" for="accountNumber"
+        >Account number</label
+      >
+      <input
+        id="accountNumber"
+        type="text"
+        formControlName="accountNumber"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+        placeholder="e.g. 12345"
+      />
+      @if (form.controls.accountNumber.touched && form.controls.accountNumber.invalid) {
+        <p class="mt-1 text-xs text-red-600">Account number is required.</p>
+      }
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700" for="digits">Digits</label>
+        <input
+          id="digits"
+          type="number"
+          formControlName="digits"
+          min="1"
+          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+        />
+        @if (form.controls.digits.touched && form.controls.digits.invalid) {
+          <p class="mt-1 text-xs text-red-600">Digits must be at least 1.</p>
+        }
+      </div>
+
+      <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700" for="initialIdx"
+          >Initial index</label
+        >
+        <input
+          id="initialIdx"
+          type="number"
+          formControlName="initialIdx"
+          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+        />
+        @if (hasInitialIdxRangeError()) {
+          <p class="mt-1 text-xs text-red-600">{{ initialIdxRangeError() }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700" for="rangeStart"
+          >Range start</label
+        >
+        <input
+          id="rangeStart"
+          type="number"
+          formControlName="rangeStart"
+          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+        />
+        @if (hasRangeOrderError()) {
+          <p class="mt-1 text-xs text-red-600">
+            Range end must be greater than or equal to range start.
+          </p>
+        }
+      </div>
+
+      <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700" for="rangeEnd"
+          >Range end</label
+        >
+        <input
+          id="rangeEnd"
+          type="number"
+          formControlName="rangeEnd"
+          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+        />
+        @if (hasRangeOrderError()) {
+          <p class="mt-1 text-xs text-red-600">
+            Range end must be greater than or equal to range start.
+          </p>
+        }
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <app-alert [message]="errorMessage()" type="error" />
+    }
+
+    <button
+      type="submit"
+      class="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="submitting()"
+    >
+      {{ submitting() ? 'Saving...' : 'Register carrier' }}
+    </button>
+  </form>
+
+  @if (showSuccessDialog()) {
+    <app-success-dialog (closed)="closeSuccessDialog()" />
+  }
+</div>

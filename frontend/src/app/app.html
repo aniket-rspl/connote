@@ -1,0 +1,29 @@
+<div class="min-h-screen">
+  <header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+      <div>
+        <p class="text-lg font-semibold text-slate-900">Connote</p>
+        <p class="text-xs text-slate-500">Consignment tracking ID manager</p>
+      </div>
+      <nav class="flex gap-2">
+        <a
+          routerLink="/generate"
+          routerLinkActive="bg-sky-600 text-white"
+          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Generate</a
+        >
+        <a
+          routerLink="/setup"
+          routerLinkActive="bg-sky-600 text-white"
+          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >Setup carrier</a
+        >
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-4 py-8">
+    <router-outlet />
+  </main>
+</div>

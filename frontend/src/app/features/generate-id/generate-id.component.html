@@ -1,0 +1,115 @@
+<div class="mx-auto max-w-2xl">
+  <h1 class="text-2xl font-semibold text-slate-900">Generate tracking ID</h1>
+  <p class="mt-1 text-sm text-slate-600">
+    Pick a carrier and issue the next consignment tracking number.
+  </p>
+
+  @if (loading()) {
+    <p class="mt-8 text-sm text-slate-500">Loading carriers...</p>
+  } @else if (carriers().length === 0) {
+    <div class="mt-8 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+      No carriers registered yet.
+      <a routerLink="/setup" class="font-medium text-sky-700 underline">Register one first</a>.
+    </div>
+  } @else {
+    <form class="mt-8 space-y-5" [formGroup]="form" (ngSubmit)="generate()">
+      <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700" for="carrierName"
+          >Carrier</label
+        >
+        <div class="relative">
+          <input
+            id="carrierName"
+            type="text"
+            role="combobox"
+            aria-autocomplete="list"
+            [attr.aria-expanded]="dropdownOpen()"
+            [attr.aria-activedescendant]="
+              activeOptionIndex() !== null ? 'carrier-option-' + activeOptionIndex() : null
+            "
+            [value]="carrierQuery()"
+            (input)="onCarrierInput($event)"
+            (keydown)="onCarrierKeydown($event)"
+            (focus)="onCarrierFocus()"
+            (blur)="onCarrierBlur()"
+            autocomplete="off"
+            placeholder="Type to search carriers..."
+            class="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2"
+            [class.border-slate-300]="!carrierFieldError()"
+            [class.focus:border-sky-500]="!carrierFieldError()"
+            [class.focus:ring-sky-200]="!carrierFieldError()"
+            [class.border-red-400]="carrierFieldError()"
+            [class.focus:border-red-500]="carrierFieldError()"
+            [class.focus:ring-red-200]="carrierFieldError()"
+          />
+
+          @if (dropdownOpen()) {
+            <ul
+              class="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+              role="listbox"
+            >
+              @if (hasNoMatch()) {
+                <li
+                  class="cursor-default px-3 py-2 text-sm text-slate-500"
+                  role="option"
+                  aria-disabled="true"
+                >
+                  No match
+                </li>
+              } @else {
+                @for (carrier of filteredCarriers(); track carrier.carrierName; let i = $index) {
+                  <li>
+                    <button
+                      type="button"
+                      [id]="'carrier-option-' + i"
+                      class="w-full px-3 py-2 text-left text-sm hover:bg-slate-100"
+                      [class.bg-sky-50]="isActiveOption(carrier, i)"
+                      [class.font-medium]="isActiveOption(carrier, i)"
+                      [class.text-sky-800]="isActiveOption(carrier, i)"
+                      (mousedown)="onCarrierOptionMouseDown($event, carrier)"
+                      (mouseenter)="onCarrierOptionMouseEnter(carrier)"
+                      role="option"
+                      [attr.aria-selected]="isActiveOption(carrier, i)"
+                    >
+                      {{ carrier.carrierName }}
+                    </button>
+                  </li>
+                }
+              }
+            </ul>
+          }
+        </div>
+
+        @if (carrierFieldError()) {
+          <p class="mt-1 text-xs text-red-600">{{ carrierFieldError() }}</p>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <app-alert [message]="errorMessage()" type="error" />
+      </div>
+
+      <button
+        type="submit"
+        class="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+        [disabled]="!canGenerate()"
+      >
+        {{ generating() ? 'Generating...' : 'Generate tracking ID' }}
+      </button>
+    </form>
+
+    @if (trackingId()) {
+      <div class="mt-8 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Tracking ID</p>
+        <p class="mt-2 break-all font-mono text-lg text-slate-900">{{ trackingId() }}</p>
+        <button
+          type="button"
+          class="mt-4 rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+          (click)="copyTrackingId()"
+        >
+          {{ copied() ? 'Copied!' : 'Copy to clipboard' }}
+        </button>
+      </div>
+    }
+  }
+</div>
